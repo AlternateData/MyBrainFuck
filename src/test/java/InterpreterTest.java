@@ -41,20 +41,15 @@ public class InterpreterTest {
     byte[] desiredResults_JumpLength = {4,6, 5, 1,3};
     int[]  starts = {3,3,0,0,1};
 
-    Map<String, List<Map.Entry>>  testCases;
-
-    @BeforeAll
-    public void initTestCases() {
-
+    public void executeTestCases(){
+        
     }
 
-
-    @RepeatedTest(value=MAX_TEST_RUNS, name="Case {currentRepetition} out of {totalRepetitions}")
     @DisplayName("jumpLength")
     public void testJumpLength(RepetitionInfo repinfo){
-        int i, start, len0, len1;
+        int start, len0, len1;
         char[] program;
-        if((i = repinfo.getCurrentRepetition()) < programSet_JumpLength.length){
+        for(int i=0; i<programSet_JumpLength.length;i++){
             program = programSet_JumpLength[i].toCharArray();
             start = starts[i];
             len0 = testbox.jumpLength(program, start);
@@ -63,5 +58,7 @@ public class InterpreterTest {
             assertEquals(len0, -len1,"Failed to compute the length of a jump towards [");
         }
     }
+
+
 
 }

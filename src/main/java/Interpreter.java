@@ -123,10 +123,12 @@ public final class Interpreter {
         //load_program(program);
         if(program == null)
             throw new NullPointerException("The Program-String may not be null");
+        /*
         if(!validateStatements(this.program))
             throw new IllegalArgumentException("The Program-String contains invalid characters");
         if(!validateBrackets(this.program))
             throw new IllegalArgumentException("Brackets do not match up");
+        */
 
         int instructionPointer = 0;
         int pointer = 0;
