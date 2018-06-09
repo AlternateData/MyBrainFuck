@@ -1,17 +1,16 @@
 package main.java;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 
-import java.util.logging.*;
 import static main.java.Instruction.*;
 
 public final class Interpreter {
 
-    // TODO: Remove the logger ! and ship !
 
+    // TODO: add capabilitie to read programs from file
+    // TODO: add example files containing fibonaci programs and such
 
     private final static int MAX_MEMORY = 4096; // 4 kb memory
 
@@ -20,9 +19,7 @@ public final class Interpreter {
     private final  Scanner scanner = new Scanner(System.in);
 
 
-
-
-    public void clearMemory(){
+    private void clearMemory(){
         for(int i=0; i<MAX_MEMORY;i++){
             memory[i] = 0;
         }
@@ -31,7 +28,7 @@ public final class Interpreter {
 
     // compute the distance from the bracket at program[start] to its closing bracket
     // if there is no bracket at program[start] an IllegalArgumentException is raised
-    public int jumpLength(Instruction[] program, int start){
+    private int jumpLength(Instruction[] program, int start){
         int skip = 0;
         int len = 0;
 
@@ -74,7 +71,8 @@ public final class Interpreter {
         return len;
     }
 
-    public byte interpret(Instruction[] program) throws NullPointerException, IllegalArgumentException{
+
+    void interpret(Instruction[] program) throws NullPointerException, IllegalArgumentException{
         if(program == null) {
             throw new NullPointerException("The Program-String may not be null");
         }
@@ -120,23 +118,23 @@ public final class Interpreter {
                     }
                     break;
                 case LOOP_END:
-                    // always jump back to the closing [
                     delta = jumpLength(program, instructionPointer);
                     break;
                 default:
-                    throw new IllegalArgumentException("The Instruction: " + instruction + " is invalid");
+                    // there is no default
+                    break;
             }
 
-            if(pointer == -1) {
+            if(pointer < 0) {
                 pointer = MAX_MEMORY - 1;
-            }else if(pointer == MAX_MEMORY + 1) {
+            }else if(pointer > MAX_MEMORY - 1) {
                 pointer = 0;
             }
+
             instructionPointer += delta;
 
         }
 
-        return memory[pointer];
     }
 
 }

@@ -1,4 +1,5 @@
 /out/
 /.idea/
 /logs/
+/src/META-INF/
 BrainFuck.iml

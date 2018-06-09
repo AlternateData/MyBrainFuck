@@ -7,8 +7,9 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Disabled
+@Deprecated
 public class InterpreterTest {
-
+/*
     Interpreter testbox = new Interpreter();
 
 
@@ -19,7 +20,6 @@ public class InterpreterTest {
             "[[[]]]1234",};
     byte[] desiredResults_JumpLength = {5, 6, 5, 1, 3};
     int[] starts = {3, 3, 0, 0, 1};
-    /*
 
     @DisplayName("jumpLength")
     @Test
