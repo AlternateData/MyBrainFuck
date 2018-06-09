@@ -19,42 +19,10 @@ public final class Interpreter {
 
     private final  Scanner scanner = new Scanner(System.in);
 
-    private static Logger logger;
-
-
-    // this inits the logger
-    static{
-        logger = Logger.getLogger(Interpreter.class.getName());
-        //logger.setLevel(Level.FINE);
-        logger.setLevel(Level.SEVERE);
-        Handler handler;
-        Formatter formatter = new Formatter(){
-
-            @Override
-            public String getHead(Handler h) {
-                return super.getHead(h);
-            }
-
-            @Override
-            public String format(LogRecord record) {
-                return String.format("[%s]: %s\n", record.getLevel(), record.getMessage());
-            }
-        };
-
-        try {
-            handler = new FileHandler("C:/Users/Louis/IdeaProjects/BrainFuck/logs/log%g.txt");
-            handler.setFormatter(formatter);
-            logger.addHandler(handler);
-        }catch(IOException ioe){
-            ioe.printStackTrace();
-        }
-    }
-
 
 
 
     public void clearMemory(){
-        logger.info("Clearing internal memory");
         for(int i=0; i<MAX_MEMORY;i++){
             memory[i] = 0;
         }
@@ -68,11 +36,9 @@ public final class Interpreter {
         int len = 0;
 
         if(program.length < start) {
-            logger.severe("Illegal index into progam");
             throw new IndexOutOfBoundsException("Illegal index into progam");
         }
         if(program[start] != LOOP_START && program[start] != LOOP_END) {
-            logger.severe("Character at index start is neither [ nor ] but is " + program[start]);
             throw new IllegalArgumentException("Character at index start is not [ or ] but is " + program[start]);
         }
 
@@ -103,16 +69,13 @@ public final class Interpreter {
         }
         //System.out.println("\ti: "+ Integer.toString(i) + "\tStart: "  +   Integer.toString(start));
         if(skip != 0){
-            logger.severe("Brackets in Program do not match up");
             throw new IllegalArgumentException();
         }
         return len;
     }
 
     public byte interpret(Instruction[] program) throws NullPointerException, IllegalArgumentException{
-        logger.info("Started interpreting a program");
         if(program == null) {
-            logger.severe("No program to interpret was given");
             throw new NullPointerException("The Program-String may not be null");
         }
 
@@ -154,29 +117,23 @@ public final class Interpreter {
                 case LOOP_START:
                     if(memory[pointer] == 0) {
                         delta = jumpLength(program, instructionPointer) + 1;
-                        logger.fine(String.format("Jumping forward %d", instructionPointer + delta));
                     }
                     break;
                 case LOOP_END:
                     // always jump back to the closing [
                     delta = jumpLength(program, instructionPointer);
-                    logger.fine(String.format("Jumping backward %d", instructionPointer + delta));
                     break;
                 default:
-                    logger.severe("Encountered Invalid Instruction: " + instruction);
                     throw new IllegalArgumentException("The Instruction: " + instruction + " is invalid");
             }
 
             if(pointer == -1) {
                 pointer = MAX_MEMORY - 1;
-                logger.info("Memory Underflow");
             }else if(pointer == MAX_MEMORY + 1) {
                 pointer = 0;
-                logger.info("Memory Overflow");
             }
             instructionPointer += delta;
 
-            logger.fine(String.format("Interpreter State:\n\t\tPointer: %d\n\t\tMemory: %d", pointer, memory[pointer]));
         }
 
         return memory[pointer];
