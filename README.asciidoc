@@ -2,7 +2,6 @@
 
 I have no clue what I am doing. Please have mercy
 
----
 
 == What is this ?
 This program takes your https://esolangs.org/wiki/Brainfuck[brainfuck] program and executes it.
