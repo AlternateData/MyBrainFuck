@@ -3,7 +3,7 @@ package main.java;
 public class Main{
 
     public static void main(String[] args) {
-        BrainFuckEngine engine = new BrainFuckEngine();
+        Engine engine = new Engine();
         engine.run("++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.\n+" +
                 ">.+++.------.--------.>+.>.");
         engine.run("+++++++++++\n" +
