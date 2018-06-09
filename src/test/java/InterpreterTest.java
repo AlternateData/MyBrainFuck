@@ -49,5 +49,13 @@ public class InterpreterTest {
         programString = "++++++[-]>+";
         testbox.interpret(programString.toCharArray());
     }
+
+    @Test
+    void helloWorld(){
+        String hello = "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.";
+        testbox.clearMemory();
+        testbox.interpret(hello.toCharArray());
+
+    }
 }
 

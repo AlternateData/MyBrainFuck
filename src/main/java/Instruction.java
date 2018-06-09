@@ -12,12 +12,23 @@ public enum Instruction {
     LOOP_END(']');
 
     private char identifier;
+    private byte opcode;
 
     Instruction(){
-
+        identifier = 0;
+        opcode = 0;
     }
 
     Instruction(char identifier){
         this.identifier = identifier;
+        // causes problems when MAX_BYTE < identifier
+        this.opcode = (byte) identifier;
+    }
+
+    public char getIdentifier(){
+        return identifier;
+    }
+    public byte getOpcode(){
+        return opcode;
     }
 }
