@@ -1,0 +1,16 @@
+= MyBrainFuck
+
+I have no clue what I am doing. Please have mercy
+
+---
+
+== What is this ?
+This program takes your https://esolangs.org/wiki/Brainfuck[brainfuck] program and executes it.
+
+== Implementation Specific Details
+
+- Any invalid Charaters in your program-string will be ignored.
+- The tape is 4kb long and wraps around both ends.
+- Programs with unbalanced brackets will not be executed and an Exception will be thrown
+- The program itself will not be copied onto the tape
+- The tape is wiped as soon as a new program is being run (Every call to interpret() wipes the tape)
