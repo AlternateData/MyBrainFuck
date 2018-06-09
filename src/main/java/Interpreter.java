@@ -4,11 +4,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
-import java.util.logging.FileHandler;
-import java.util.logging.Handler;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
-import java.util.logging.Level;
+import java.util.logging.*;
 
 public final class Interpreter {
 
@@ -35,9 +31,21 @@ public final class Interpreter {
         logger = Logger.getLogger(Interpreter.class.getName());
         logger.setLevel(Level.FINE);
         Handler handler;
-        SimpleFormatter formatter = new SimpleFormatter();
+        Formatter formatter = new Formatter(){
+
+            @Override
+            public String getHead(Handler h) {
+                return super.getHead(h);
+            }
+
+            @Override
+            public String format(LogRecord record) {
+                return String.format("[%s]: %s\n", record.getLevel(), record.getMessage());
+            }
+        };
+
         try {
-            handler = new FileHandler("../resources/log.txt");
+            handler = new FileHandler("C:/Users/Louis/IdeaProjects/BrainFuck/logs/log%g.txt");
             handler.setFormatter(formatter);
             logger.addHandler(handler);
         }catch(IOException ioe){
@@ -156,6 +164,9 @@ public final class Interpreter {
             logger.severe("No program to interpret was given");
             throw new NullPointerException("The Program-String may not be null");
         }
+
+        logger.info("------------------");
+        logger.info("Working on program " + new String(program));
         /*
         // validation happens during parsing now
         if(!validateStatements(this.program))
@@ -174,13 +185,6 @@ public final class Interpreter {
             instruction = program[instructionPointer];
             logger.info("Working on Instruction: " + instruction);
 
-            if(pointer == -1) {
-                pointer = MAX_MEMORY;
-                logger.info("Memory Underflow");
-            }else if(pointer == MAX_MEMORY + 1) {
-                logger.info("Memory Overflow");
-                pointer = 0;
-            }
 
 
             delta = 1;
@@ -208,21 +212,30 @@ public final class Interpreter {
                     memory[pointer] = inputByte[0];
                     break;
                 case '[':
-                    logger.fine("Entering Loop");
                     if(memory[pointer] == 0) {
                         delta = jumpLength(program, instructionPointer) + 1;
-                        logger.info("Exiting Loop");
+                        logger.fine(String.format("Jumping forward %d", instructionPointer + delta));
                     }
                     break;
                 case ']':
-                    // always jump back to the last [
+                    // always jump back to the closing [
                     delta = jumpLength(program, instructionPointer);
+                    logger.fine(String.format("Jumping backwards %d", instructionPointer + delta));
                     break;
                 default:
+                    logger.severe("Encountered Invalid Instruction: " + instruction);
                     throw new IllegalArgumentException("The Instruction: " + instruction + " is invalid");
             }
+
+            if(pointer == -1) {
+                pointer = MAX_MEMORY - 1;
+                logger.info("Memory Underflow");
+            }else if(pointer == MAX_MEMORY + 1) {
+                logger.info("Memory Overflow");
+                pointer = 0;
+            }
+
             logger.info(String.format("Pointer: %d\tMemory: %d", pointer, memory[pointer]));
-            logger.fine(String.format("Jumping towards %d", instructionPointer + delta));
             instructionPointer += delta;
         }
 

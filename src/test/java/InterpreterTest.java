@@ -3,8 +3,6 @@ package test.java;
 import main.java.Interpreter;
 import org.junit.jupiter.api.*;
 
-import java.util.List;
-
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -45,6 +43,10 @@ public class InterpreterTest {
     @Test
     void testInterpret(){
         String programString = ">>>>>>";
+        testbox.interpret(programString.toCharArray());
+        programString = "<<<<<<";
+        testbox.interpret(programString.toCharArray());
+        programString = "++++++[-]>+";
         testbox.interpret(programString.toCharArray());
     }
 }
