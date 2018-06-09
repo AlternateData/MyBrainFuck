@@ -10,12 +10,10 @@ import static main.java.Instruction.*;
 
 public final class Interpreter {
 
-    // TODO: retire the programm array and instead load the program directly into memory/tape array
+    // TODO: Remove the logger ! and ship !
 
-    private final static char[] VALID_INSTRUCTIONS = {'>', '<', '+', '-', '.', ',', '[', ']'};
 
     private final static int MAX_MEMORY = 4096; // 4 kb memory
-    private final static int MAX_PROGRAM_MEMORY = 1024;
 
     private byte[] memory = new byte[MAX_MEMORY]; // this is the tape
 
