@@ -8,7 +8,13 @@ public class Engine {
     }
 
     public void run(String programString){
-        Instruction[] program = Parser.parse(programString);
-        interpreter.interpret(program);
+
+        Instruction[] program;
+        try {
+            program = Parser.parse(programString);
+            interpreter.interpret(program);
+        }catch(UnbalancedBracketsException ube){
+            ube.printMessage();
+        }
     }
 }

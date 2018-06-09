@@ -18,6 +18,43 @@ public class Parser {
         return i == 0;
     }
 
+    private static void matchBrackets(Instruction[] prog) throws UnbalancedBracketsException{
+        int skips = 0;
+        boolean matched;
+        for(int i = 0; i < prog.length;i++){
+            matched = false;
+            if(prog[i] == LOOP_START){
+                for(int j=i+1;j < prog.length;j++){
+                    if(prog[j] == LOOP_START){
+                        skips++;
+                    }else if(prog[j] == LOOP_END && skips > 0){
+                        skips--;
+                    }else if(prog[j] == LOOP_END){
+                        matched = true;
+                        break;
+                    }
+                }
+                if(skips != 0 || !matched){
+                    throw new UnbalancedBracketsException(LOOP_START, i);
+                }
+            }else if(prog[i] ==  LOOP_END){
+                for(int j=i-1;j > 0;j--){
+                    if(prog[j] == LOOP_END){
+                        skips++;
+                    }else if(prog[j] == LOOP_START && skips > 0){
+                        skips--;
+                    }else{
+                        break;
+                    }
+                }
+                if(skips != 0){
+                    throw new UnbalancedBracketsException(LOOP_START, i);
+                }
+
+            }
+        }
+    }
+
 
     public static Instruction[] translate(char[] programString){
 
@@ -40,12 +77,11 @@ public class Parser {
         return program;
     }
 
-    public static Instruction[] parse(String programString){
+    public static Instruction[] parse(String programString) throws UnbalancedBracketsException{
         char[] identifiers = programString.toCharArray();
-        if(!validateBrackets(identifiers)){
-            throw new IllegalArgumentException("The Brackets in the given program do not match up !");
-        }
-        return translate(identifiers);
+        Instruction[] program = translate(identifiers);
+        matchBrackets(program);
+        return program;
     }
 
 

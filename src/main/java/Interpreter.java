@@ -65,9 +65,7 @@ public final class Interpreter {
             }
         }
         //System.out.println("\ti: "+ Integer.toString(i) + "\tStart: "  +   Integer.toString(start));
-        if(skip != 0){
-            throw new IllegalArgumentException();
-        }
+        assert(skip != 0);
         return len;
     }
 
