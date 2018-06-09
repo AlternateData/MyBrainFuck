@@ -112,11 +112,13 @@ public final class Interpreter {
     }
 
     public byte interpret(Instruction[] program) throws NullPointerException, IllegalArgumentException{
-        clearMemory();
+        logger.info("Started interpreting a program");
         if(program == null) {
             logger.severe("No program to interpret was given");
             throw new NullPointerException("The Program-String may not be null");
         }
+
+        clearMemory();
 
         int instructionPointer = 0;
         int pointer = 0;
@@ -125,11 +127,12 @@ public final class Interpreter {
 
         while(instructionPointer < program.length){
 
-            instruction = program[instructionPointer];
-            logger.fine("Working on Instruction: " + instruction);
-
             delta = 1;
+            instruction = program[instructionPointer];
+
             switch(instruction){
+                case NOP:
+                    break;
                 case RSHIFT:
                     pointer++;
                     break;
@@ -159,7 +162,7 @@ public final class Interpreter {
                 case LOOP_END:
                     // always jump back to the closing [
                     delta = jumpLength(program, instructionPointer);
-                    logger.fine(String.format("Jumping backwards %d", instructionPointer + delta));
+                    logger.fine(String.format("Jumping backward %d", instructionPointer + delta));
                     break;
                 default:
                     logger.severe("Encountered Invalid Instruction: " + instruction);
@@ -170,12 +173,12 @@ public final class Interpreter {
                 pointer = MAX_MEMORY - 1;
                 logger.info("Memory Underflow");
             }else if(pointer == MAX_MEMORY + 1) {
-                logger.info("Memory Overflow");
                 pointer = 0;
+                logger.info("Memory Overflow");
             }
+            instructionPointer += delta;
 
             logger.fine(String.format("Interpreter State:\n\t\tPointer: %d\n\t\tMemory: %d", pointer, memory[pointer]));
-            instructionPointer += delta;
         }
 
         return memory[pointer];
