@@ -1,6 +1,5 @@
 package main.java;
 
-import java.nio.FloatBuffer;
 
 public class Main{
 
@@ -13,13 +12,14 @@ public class Main{
     public static void main(String[] args) {
         Engine engine = new Engine();
         if(args.length == 0){
-            System.out.println(String.format(USAGE));
+            System.out.println(USAGE);
             System.exit(-1);
         }
         try{
             engine.run(args[0]);
         }catch(IllegalArgumentException e){
-            System.err.println("Program contains syntax errors");
+            System.err.println("Severe Internal Error. Parser gave Interpreter an invalid Program.");
+            e.printStackTrace();
             System.exit(-1);
         }
         System.exit(0);

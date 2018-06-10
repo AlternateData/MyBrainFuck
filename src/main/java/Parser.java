@@ -7,56 +7,47 @@ import static main.java.Instruction.LOOP_END;
 public class Parser {
 
 
-    private static boolean validateBrackets(char[] prog){
-        int i = 0;
-        for(char progStat:prog){
-            if(progStat == LOOP_START.getIdentifier())
-                i++;
-            else if(progStat == LOOP_END.getIdentifier())
-                i--;
-        }
-        return i == 0;
-    }
-
-    private static void matchBrackets(Instruction[] prog) throws UnbalancedBracketsException{
-        int skips = 0;
+    private static void matchBrackets(Instruction[] program) throws UnbalancedBracketsException{
+        int skips;
         boolean matched;
-        for(int i = 0; i < prog.length;i++){
-            matched = false;
-            if(prog[i] == LOOP_START){
-                for(int j=i+1;j < prog.length;j++){
-                    if(prog[j] == LOOP_START){
-                        skips++;
-                    }else if(prog[j] == LOOP_END && skips > 0){
-                        skips--;
-                    }else if(prog[j] == LOOP_END){
-                        matched = true;
-                        break;
-                    }
-                }
-                if(skips != 0 || !matched){
-                    throw new UnbalancedBracketsException(LOOP_START, i);
-                }
-            }else if(prog[i] ==  LOOP_END){
-                for(int j=i-1;j > 0;j--){
-                    if(prog[j] == LOOP_END){
-                        skips++;
-                    }else if(prog[j] == LOOP_START && skips > 0){
-                        skips--;
-                    }else{
-                        break;
-                    }
-                }
-                if(skips != 0){
-                    throw new UnbalancedBracketsException(LOOP_START, i);
-                }
+        Instruction searched;
+        int j;
+        int dj;
 
+        for(int i = 0; i < program.length;i++){
+            if(program[i] == LOOP_START){
+                searched = LOOP_END;
+                j = i + 1;
+                dj = 1;
+            }else if(program[i] == LOOP_END){
+                searched = LOOP_START;
+                j = i - 1;
+                dj = -1;
+            }else{
+                continue;
+            }
+
+            skips = 0;
+            matched = false;
+
+            for(;0 <= j && j < program.length;j+=dj){
+                if(program[j] == program[i]){
+                    skips++;
+                }else if(program[j] == searched && skips > 0){
+                    skips--;
+                }else if(program[j] == searched){
+                    matched = true;
+                    break;
+                }
+            }
+            if(skips != 0 || !matched){
+                throw new UnbalancedBracketsException(LOOP_START, i);
             }
         }
     }
 
 
-    public static Instruction[] translate(char[] programString){
+    private static Instruction[] translate(char[] programString){
 
         Instruction instruction;
         Instruction[] program = new Instruction[programString.length];
