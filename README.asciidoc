@@ -8,7 +8,7 @@ This program executes your https://esolangs.org/wiki/Brainfuck[brainfuck] progra
 
 == Implementation Specific Details
 
-- Any invalid Charaters in your program-string will be ignored.
+- Any invalid Characters in your program-string will be ignored.
 - The tape is 4kb long and wraps around both ends.
 - Programs with unbalanced brackets will not be executed and an Exception will be thrown.
 - The program itself will not be copied onto the tape.
