@@ -41,11 +41,10 @@ public class Parser {
                 }
             }
             if(skips != 0 || !matched){
-                throw new UnbalancedBracketsException(LOOP_START, i);
+                throw new UnbalancedBracketsException(program[i], i);
             }
         }
     }
-
 
     private static Instruction[] translate(char[] programString){
 

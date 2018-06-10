@@ -13,9 +13,8 @@ public class Engine {
         try {
             program = Parser.parse(programString);
             interpreter.interpret(program);
-        }catch(UnbalancedBracketsException ube){
-            System.out.print("Syntax Error:\n\t");
-            ube.printMessage();
+        }catch(SyntaxError se){
+            se.printMessage();
         }
     }
 }

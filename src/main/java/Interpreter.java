@@ -1,5 +1,6 @@
 package main.java;
 
+import java.io.InvalidObjectException;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
@@ -18,17 +19,15 @@ public final class Interpreter {
 
     private final  Scanner scanner = new Scanner(System.in);
 
-
     private void clearMemory(){
         for(int i=0; i<MAX_MEMORY;i++){
             memory[i] = 0;
         }
     }
 
-
     // compute the distance from the bracket at program[start] to its closing bracket
     // if there is no bracket at program[start] an IllegalArgumentException is raised
-    private int jumpLength(Instruction[] program, int start){
+    private int jumpLength(Instruction[] program, int start) throws UnbalancedBracketsException{
         int skip = 0;
         int len = 0;
 
@@ -36,7 +35,7 @@ public final class Interpreter {
             throw new IndexOutOfBoundsException("Illegal index into progam");
         }
         if(program[start] != LOOP_START && program[start] != LOOP_END) {
-            throw new IllegalArgumentException("Character at index start is not [ or ] but is " + program[start]);
+            throw new IllegalArgumentException("Character at index start is not [ or ] but is " + program[start].toString());
         }
 
         int i = start + 1;
@@ -50,7 +49,6 @@ public final class Interpreter {
             di = -1;
             i = start - 1;
         }
-        //System.out.println("\tSeen: " + seen + "\tdi: " + Integer.toString(di));
 
         Instruction ithInstruction;
         for(;0 <= i && i < program.length; i+=di){
@@ -64,13 +62,13 @@ public final class Interpreter {
                 break;
             }
         }
-        //System.out.println("\ti: "+ Integer.toString(i) + "\tStart: "  +   Integer.toString(start));
-        assert(skip != 0);
+        if(skip == 0)
+            throw new UnbalancedBracketsException();
         return len;
     }
 
 
-    void interpret(Instruction[] program) throws NullPointerException, IllegalArgumentException{
+    void interpret(Instruction[] program) throws NullPointerException, SyntaxError{
         if(program == null) {
             throw new NullPointerException("The Program-String may not be null");
         }
@@ -88,27 +86,20 @@ public final class Interpreter {
             instruction = program[instructionPointer];
 
             switch(instruction){
-                case NOP:
-                    break;
+                case NOP: break;
                 case RSHIFT:
-                    pointer++;
-                    break;
+                    pointer++; break;
                 case LSHIFT:
-                    pointer--;
-                    break;
+                    pointer--; break;
                 case INCR:
-                    memory[pointer]++;
-                    break;
+                    memory[pointer]++; break;
                 case DECR:
-                    memory[pointer]--;
-                    break;
+                    memory[pointer]--; break;
                 case PRINT:
-                    System.out.print((char) memory[pointer]);
-                    break;
+                    System.out.print((char) memory[pointer]); break;
                 case READ:
                     String input = scanner.next();
-                    byte[] inputByte = input.getBytes(StandardCharsets.US_ASCII);
-                    memory[pointer] = inputByte[0];
+                    memory[pointer] = (byte) input.charAt(0);
                     break;
                 case LOOP_START:
                     if(memory[pointer] == 0) {
@@ -116,11 +107,9 @@ public final class Interpreter {
                     }
                     break;
                 case LOOP_END:
-                    delta = jumpLength(program, instructionPointer);
-                    break;
+                    delta = jumpLength(program, instructionPointer); break;
                 default:
-                    // there is no default
-                    break;
+                    throw new SyntaxError("Invalid instruction: "  + instruction.toString(), instructionPointer);
             }
 
             if(pointer < 0) {

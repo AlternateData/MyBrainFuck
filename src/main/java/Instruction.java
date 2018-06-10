@@ -25,6 +25,10 @@ public enum Instruction {
         this.opcode = (byte) identifier;
     }
 
+    public String toString(){
+        return this.name() + " " + this.getIdentifier();
+    }
+
     public char getIdentifier(){
         return identifier;
     }

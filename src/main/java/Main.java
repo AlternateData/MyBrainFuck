@@ -15,13 +15,6 @@ public class Main{
             System.out.println(USAGE);
             System.exit(-1);
         }
-        try{
-            engine.run(args[0]);
-        }catch(IllegalArgumentException e){
-            System.err.println("Severe Internal Error. Parser gave Interpreter an invalid Program.");
-            e.printStackTrace();
-            System.exit(-1);
-        }
-        System.exit(0);
+        engine.run(args[0]);
     }
 }
