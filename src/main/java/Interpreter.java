@@ -1,5 +1,6 @@
 package main.java;
 
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 
@@ -31,10 +32,10 @@ public final class Interpreter {
         int len = 0;
 
         if(program.length < start) {
-            throw new IndexOutOfBoundsException("Illegal index into progam");
+            throw new IndexOutOfBoundsException("Internal Error: Illegal index into progam");
         }
         if(program[start] != LOOP_START && program[start] != LOOP_END) {
-            throw new IllegalArgumentException("Character at index start is not [ or ] but is " + program[start].toString());
+            throw new IllegalArgumentException("Internal Error: Character at index start is not [ or ] but is " + program[start].toString());
         }
 
         int i = start + 1;
@@ -62,14 +63,14 @@ public final class Interpreter {
             }
         }
         if(skip != 0)
-            throw new UnbalancedBracketsException();
+            throw new UnbalancedBracketsException("Internal Error: Brackets are unbalanced");
         return len;
     }
 
 
     void interpret(Instruction[] program) throws NullPointerException, SyntaxError{
         if(program == null) {
-            throw new NullPointerException("The Program-String may not be null");
+            throw new NullPointerException("Internal Error: The Program-String may not be null");
         }
 
         clearMemory();
@@ -78,6 +79,7 @@ public final class Interpreter {
         int pointer = 0;
         int delta;
         Instruction instruction;
+        String input;
 
         while(instructionPointer < program.length){
 
@@ -103,7 +105,7 @@ public final class Interpreter {
                     System.out.print((char) memory[pointer]);
                     break;
                 case READ:
-                    String input = scanner.next();
+                    input =  scanner.next();
                     memory[pointer] = (byte) input.charAt(0);
                     break;
                 case LOOP_START:
@@ -115,7 +117,7 @@ public final class Interpreter {
                     delta = jumpLength(program, instructionPointer);
                     break;
                 default:
-                    throw new SyntaxError("Invalid instruction: "  + instruction.toString(), instructionPointer);
+                    throw new SyntaxError("Internal Error: Invalid instruction: "  + instruction.toString(), instructionPointer);
             }
 
             if(pointer < 0) {

@@ -13,7 +13,7 @@ public class SyntaxError extends Exception{
     }
 
     void printMessage(){
-        System.out.println(getMessage());
+        System.err.println(getMessage());
     }
 
 }
