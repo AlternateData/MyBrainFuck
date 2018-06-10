@@ -1,7 +1,5 @@
 package main.java;
 
-import java.io.InvalidObjectException;
-import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 
@@ -12,6 +10,7 @@ public final class Interpreter {
 
     // TODO: add capabilitie to read programs from file
     // TODO: add example files containing fibonaci programs and such
+    // TODO: add stacks
 
     private final static int MAX_MEMORY = 4096; // 4 kb memory
 
@@ -62,7 +61,7 @@ public final class Interpreter {
                 break;
             }
         }
-        if(skip == 0)
+        if(skip != 0)
             throw new UnbalancedBracketsException();
         return len;
     }
@@ -86,17 +85,23 @@ public final class Interpreter {
             instruction = program[instructionPointer];
 
             switch(instruction){
-                case NOP: break;
+                case NOP:
+                    break;
                 case RSHIFT:
-                    pointer++; break;
+                    pointer++;
+                    break;
                 case LSHIFT:
-                    pointer--; break;
+                    pointer--;
+                    break;
                 case INCR:
-                    memory[pointer]++; break;
+                    memory[pointer]++;
+                    break;
                 case DECR:
-                    memory[pointer]--; break;
+                    memory[pointer]--;
+                    break;
                 case PRINT:
-                    System.out.print((char) memory[pointer]); break;
+                    System.out.print((char) memory[pointer]);
+                    break;
                 case READ:
                     String input = scanner.next();
                     memory[pointer] = (byte) input.charAt(0);
@@ -107,7 +112,8 @@ public final class Interpreter {
                     }
                     break;
                 case LOOP_END:
-                    delta = jumpLength(program, instructionPointer); break;
+                    delta = jumpLength(program, instructionPointer);
+                    break;
                 default:
                     throw new SyntaxError("Invalid instruction: "  + instruction.toString(), instructionPointer);
             }
