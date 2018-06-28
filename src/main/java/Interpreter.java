@@ -1,6 +1,5 @@
 package main.java;
 
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 
@@ -9,9 +8,7 @@ import static main.java.Instruction.*;
 public final class Interpreter {
 
 
-    // TODO: add capabilitie to read programs from file
-    // TODO: add example files containing fibonaci programs and such
-    // TODO: add stacks
+    // TODO: add example files containing fibonacci programs and other such things
 
     private final static int MAX_MEMORY = 4096; // 4 kb memory
 
@@ -27,15 +24,15 @@ public final class Interpreter {
 
     // compute the distance from the bracket at program[start] to its closing bracket
     // if there is no bracket at program[start] an IllegalArgumentException is raised
-    private int jumpLength(Instruction[] program, int start) throws UnbalancedBracketsException{
+    private int jumpLength(Instruction[] program, int start) throws SyntaxError{
         int skip = 0;
         int len = 0;
 
         if(program.length < start) {
-            throw new IndexOutOfBoundsException("Internal Error: Illegal index into progam");
+            throw new IndexOutOfBoundsException("Internal Error: start is and illegal index into program");
         }
         if(program[start] != LOOP_START && program[start] != LOOP_END) {
-            throw new IllegalArgumentException("Internal Error: Character at index start is not [ or ] but is " + program[start].toString());
+            throw new IllegalArgumentException("Internal Error: Character at index start is neither [ nor ] but is " + program[start].toString());
         }
 
         int i = start + 1;
@@ -62,8 +59,9 @@ public final class Interpreter {
                 break;
             }
         }
+
         if(skip != 0)
-            throw new UnbalancedBracketsException("Internal Error: Brackets are unbalanced");
+            throw new SyntaxError("Internal Error: Brackets are unbalanced");
         return len;
     }
 

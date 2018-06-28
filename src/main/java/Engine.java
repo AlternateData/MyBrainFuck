@@ -41,7 +41,7 @@ public class Engine {
         }catch(SyntaxError se){
             se.printMessage();
         }catch(NoSuchElementException e){
-            System.out.println("Program ended prematurely. Scanner has run out of elments.");
+            System.out.println("\nProgram ended prematurely. Scanner has run out of elements.");
         }
     }
 }
