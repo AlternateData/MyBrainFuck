@@ -1,7 +1,5 @@
 = MyBrainFuck
 
-I have no clue what I am doing. Please have mercy
-
 
 == What is this ?
 This program executes your https://esolangs.org/wiki/Brainfuck[brainfuck] program.
